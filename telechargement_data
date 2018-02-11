@@ -1,0 +1,9 @@
+mkdir ~/data_proj
+mkdir ~/data_f
+
+wget https://data.cityofnewyork.us/resource/cw3p-q2v6.csv -O ~/data_proj/farmer.csv
+wget https://data.cityofnewyork.us/resource/9w7m-hzhe.csv?'$limit'=400000 -O ~/data_proj/restaurant.csv
+wget https://data.cityofnewyork.us/resource/ggvk-gyea.csv -O ~/data_proj/bins.csv
+wget https://data.cityofnewyork.us/resource/mb25-ws8r.csv -O ~/data_proj/library.csv
+
+

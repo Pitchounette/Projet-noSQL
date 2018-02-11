@@ -1,0 +1,71 @@
+
+###Import des données###
+
+LOAD CSV WITH HEADERS FROM "file:///data2/bin2.csv" AS row
+CREATE (n:bins)
+Set n = row,
+	n.borough = row.borough,
+	n.name = row.park_site_name,
+	n.type = row.site_type
+
+
+
+LOAD CSV WITH HEADERS FROM "file:///data2/library2.csv" AS row
+CREATE (n:library)
+Set n = row,
+	n.borough = row.boro_central_library,
+    n.network = row.network,
+    n.branch = row.branch,
+    n.weeklyhours = toINT(row.weekly_hours_of_public_service)
+
+
+
+LOAD CSV WITH HEADERS FROM "file:///data2/restaurant2.csv" AS row
+CREATE (n:restaurant)
+Set n = row,
+n.restauname = row.dba,
+	n.borough = row.boro,
+    n.zipcode = row.zipcode,
+    n.cuisine_description = row.cuisine_description,
+    n.inspection_date = row.inspection_date
+
+
+LOAD CSV WITH HEADERS FROM "file:///data2/farmer2.csv" AS row
+CREATE (n:farmer)
+Set n = row,
+	n.borough = row.facilitycity,
+    n.zipcode = row.facilityzipcode,
+    n.name = row.facilityname
+
+
+
+###Districts avec le plus de poubelles de recyclage ####
+
+
+match (b:bins)
+return b.borough,count(*) as nb_bins
+order by nb_bins desc
+
+### Districts avec le plus d'heures de service dans les bibliothèques entre Manhattan et le Queens###
+
+match (l:library)
+where l.borough="Manhattan" or l.borough="Queens"
+return l.borough,count(l.weeklyhours) as nb_hours
+order by nb_hours desc
+
+### Zipcode de Manhattan avec le plus de farmers market ####
+
+match(f:farmer)
+where f.borough="Manhattan"
+return f.zipcode,count(*) as nb_farmer
+order by nb_farmer desc
+
+
+### Zipcode avec le moins d'inspection sanitaires des restaurants chinois ou français, parmis les précédents ###
+
+match(r:restaurant)
+where (r.cuisine_description="Chinese" or r.cuisine_description="French") and (r.zipcode = "10029" or r.zipcode = "10031" or r.zipcode = "10004" or r.zipcode = "10019" or r.zipcode = "10027" or r.zipcode = "10009" or r.zipcode = "10003" or r.zipcode = "10026" or r.zipcode = "10011")
+return r.zipcode,count(*) as nb_restau_chinese_french
+order by nb_restau_chinese_french
+
+
